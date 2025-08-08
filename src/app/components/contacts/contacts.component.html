@@ -1,4 +1,221 @@
-<app-breadcrumb [title]="'Contacts'" [items]="['Apps']" [active_item]="'Contacts'"></app-breadcrumb>
+<app-breadcrumb [title]="'Utilisateurs'" [items]="['Apps']" [active_item]="'Ajouter Utilisateur'"></app-breadcrumb>
+<div class="container-fluid">
+  <div class="row m-0">
+    <div class="col-12 p-0">
+      <div class="login-card">
+        <form class="theme-form login-form" [formGroup]="userForm" (ngSubmit)="onSubmit()">
+          <h4>Ajouter un nouvel utilisateur</h4>
+          <h6>Entrez les détails de l'utilisateur</h6>
+          
+          <!-- Nom et Prénom -->
+          <div class="form-group">
+            <label>Nom et Prénom</label>
+            <div class="small-group">
+              <div class="input-group">
+                <span class="input-group-text"><i class="icon-user"></i></span>
+                <input 
+                  class="form-control" 
+                  type="text" 
+                  formControlName="nom"
+                  placeholder="Nom"
+                  [class.is-invalid]="userForm.get('nom')?.invalid && userForm.get('nom')?.touched">
+              </div>
+              <div class="input-group">
+                <span class="input-group-text"><i class="icon-user"></i></span>
+                <input 
+                  class="form-control" 
+                  type="text" 
+                  formControlName="prenom"
+                  placeholder="Prénom"
+                  [class.is-invalid]="userForm.get('prenom')?.invalid && userForm.get('prenom')?.touched">
+              </div>
+            </div>
+            <div class="invalid-feedback" *ngIf="userForm.get('nom')?.invalid && userForm.get('nom')?.touched">
+              Le nom est requis
+            </div>
+            <div class="invalid-feedback" *ngIf="userForm.get('prenom')?.invalid && userForm.get('prenom')?.touched">
+              Le prénom est requis
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="form-group">
+            <label>Adresse Email</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="icon-email"></i></span>
+              <input 
+                class="form-control" 
+                type="email" 
+                formControlName="email"
+                placeholder="exemple@email.com"
+                [class.is-invalid]="userForm.get('email')?.invalid && userForm.get('email')?.touched">
+            </div>
+            <div class="invalid-feedback" *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched">
+              <div *ngIf="userForm.get('email')?.errors?.['required']">L'email est requis</div>
+              <div *ngIf="userForm.get('email')?.errors?.['email']">Format d'email invalide</div>
+            </div>
+          </div>
+
+          <!-- Téléphone -->
+          <div class="form-group">
+            <label>Téléphone</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="icon-mobile"></i></span>
+              <input 
+                class="form-control" 
+                type="tel" 
+                formControlName="tlf"
+                placeholder="Numéro de téléphone"
+                [class.is-invalid]="userForm.get('tlf')?.invalid && userForm.get('tlf')?.touched">
+            </div>
+            <div class="invalid-feedback" *ngIf="userForm.get('tlf')?.invalid && userForm.get('tlf')?.touched">
+              Le téléphone est requis
+            </div>
+          </div>
+
+          <!-- Adresse -->
+          <div class="form-group">
+            <label>Adresse</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="icon-location-pin"></i></span>
+              <input 
+                class="form-control" 
+                type="text" 
+                formControlName="adresse"
+                placeholder="Adresse complète"
+                [class.is-invalid]="userForm.get('adresse')?.invalid && userForm.get('adresse')?.touched">
+            </div>
+            <div class="invalid-feedback" *ngIf="userForm.get('adresse')?.invalid && userForm.get('adresse')?.touched">
+              L'adresse est requise
+            </div>
+          </div>
+
+          <!-- Rôles -->
+          <div class="form-group">
+            <label>Rôle</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="icon-shield"></i></span>
+              <select 
+                class="form-control" 
+                formControlName="roles"
+                [class.is-invalid]="userForm.get('roles')?.invalid && userForm.get('roles')?.touched">
+                <option value="">Sélectionner un rôle</option>
+                <option value="ROLE_PATIENT">Patient</option>
+                <option value="ROLE_MEDECIN">Médecin</option>
+                <option value="ROLE_USER">Utilisateur</option>
+                <option value="ROLE_ADMIN">Administrateur</option>
+              </select>
+            </div>
+            <div class="invalid-feedback" *ngIf="userForm.get('roles')?.invalid && userForm.get('roles')?.touched">
+              Le rôle est requis
+            </div>
+          </div>
+
+          <!-- Mot de passe -->
+          <div class="form-group">
+            <label>Mot de passe</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="icon-lock"></i></span>
+              <input 
+                class="form-control" 
+                [type]="show ? 'text' : 'password'"
+                formControlName="password"
+                placeholder="Mot de passe"
+                [class.is-invalid]="userForm.get('password')?.invalid && userForm.get('password')?.touched">
+              @if (show) {
+                <div class="show-hide" (click)="showPassword()"><span class="Hide"></span></div>
+              } @else {
+                <div class="show-hide" (click)="showPassword()"><span class="show"></span></div>
+              }
+            </div>
+            <div class="invalid-feedback" *ngIf="userForm.get('password')?.invalid && userForm.get('password')?.touched">
+              <div *ngIf="userForm.get('password')?.errors?.['required']">Le mot de passe est requis</div>
+              <div *ngIf="userForm.get('password')?.errors?.['minlength']">Le mot de passe doit contenir au moins 6 caractères</div>
+            </div>
+          </div>
+
+          <!-- Confirmation mot de passe -->
+          <div class="form-group">
+            <label>Confirmer le mot de passe</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="icon-lock"></i></span>
+              <input 
+                class="form-control" 
+                type="password"
+                formControlName="confirmPassword"
+                placeholder="Confirmer le mot de passe"
+                [class.is-invalid]="userForm.get('confirmPassword')?.invalid && userForm.get('confirmPassword')?.touched">
+            </div>
+            <div class="invalid-feedback" *ngIf="userForm.get('confirmPassword')?.invalid && userForm.get('confirmPassword')?.touched">
+              <div *ngIf="userForm.get('confirmPassword')?.errors?.['required']">La confirmation est requise</div>
+              <div *ngIf="userForm.get('confirmPassword')?.errors?.['passwordMismatch']">Les mots de passe ne correspondent pas</div>
+            </div>
+          </div>
+
+          <!-- Boutons d'action -->
+          <div class="form-group">
+            <div class="row">
+              <div class="col-6">
+                <button 
+                  class="btn btn-secondary btn-block" 
+                  type="button"
+                  (click)="onCancel()">
+                  Annuler
+                </button>
+              </div>
+              <div class="col-6">
+                <button 
+                  class="btn btn-primary btn-block" 
+                  type="submit"
+                  [disabled]="userForm.invalid || isSubmitting">
+                  <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
+                  {{ isSubmitting ? 'Création...' : 'Créer Utilisateur' }}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Messages d'erreur globaux -->
+          <div class="alert alert-danger" *ngIf="errorMessage">
+            {{ errorMessage }}
+          </div>
+
+          <!-- Message de succès -->
+          <div class="alert alert-success" *ngIf="successMessage">
+            {{ successMessage }}
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <app-breadcrumb [title]="'Contacts'" [items]="['Apps']" [active_item]="'Contacts'"></app-breadcrumb>
 <div class="container-fluid">
   <div class="row m-0">
     <div class="col-12 p-0">
@@ -64,4 +281,4 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->

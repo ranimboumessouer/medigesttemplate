@@ -163,7 +163,7 @@ export class NavService {
     },
     // { path: "/bookmark", title: "Bookmark", icon: "bookmark", type: "link" },
     // { path: "/task", title: "Task", icon: "task", type: "link", bookmark: true },
-    { path: "/contacts", title: "Contacts", icon: "contacts", type: "link", bookmark: true },
+    { path: "/contacts", title: "Ajouter Utilisateur", icon: "contacts", type: "link", bookmark: true },
     // { path: "/calender", title: "Calender", icon: "calender", type: "link" },
     // { path: "/social-app", title: "Social App", icon: "social", type: "link" },
     // { path: "/to-do", title: "To-Do", icon: "todo", type: "link", bookmark: true },
