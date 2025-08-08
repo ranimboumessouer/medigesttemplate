@@ -155,7 +155,7 @@ export class NavService {
       active: false,
       children: [
         // { path: "/users/users-profile", title: "Ajouter Patient", type: "link" },
-        { path: "/authentication/register/register-simple", title: "Ajouter Patient", type: "link" },
+        { path: "/to-do", title: "Ajouter Patient", type: "link" },
         //{ path: "/users/users-edit", title: "Users Edit", type: "link" },
         { path: "/users/users-cards", title: "Liste des Patients", type: "link" },
         // { path: "/users/add-patient", title: "Ajouter Patient", type: "link" },
@@ -166,7 +166,7 @@ export class NavService {
     { path: "/contacts", title: "Ajouter Utilisateur", icon: "contacts", type: "link", bookmark: true },
     // { path: "/calender", title: "Calender", icon: "calender", type: "link" },
     // { path: "/social-app", title: "Social App", icon: "social", type: "link" },
-    // { path: "/to-do", title: "To-Do", icon: "todo", type: "link", bookmark: true },
+    // { path: "/to-do", title: "Ajouter Patient", icon: "contacts", type: "link", bookmark: true },
     // { path: "/search-website", title: "Search Website", icon: "website", type: "link" },
     // {
     //   title: "Forms",

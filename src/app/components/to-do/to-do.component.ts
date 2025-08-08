@@ -1,10 +1,12 @@
 import { Component, OnInit } from "@angular/core";
 import * as data from "../../shared/data/todo/todo";
-import { FormsModule } from "@angular/forms";
-import { RouterLink } from "@angular/router";
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import { Router, RouterLink } from "@angular/router";
 import { CommonModule } from "@angular/common";
 import { ToDoFilterComponent } from "./to-do-filter/to-do-filter.component";
 import { BreadcrumbComponent } from "../../shared/components/breadcrumb/breadcrumb.component";
+import { UserService } from "../../services/user.service";
+import { PatientsService } from "../../services/patients.service";
 
 // const Months = [
 //   "January",
@@ -46,7 +48,7 @@ export class ToDoComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
-    private patientService: PatientService,
+    private patientService: PatientsService,
     private router: Router
   ) {
     this.patientForm = this.fb.group({
