@@ -1,3 +1,21 @@
 .text-danger {
   color: #f1ebea !important;
 }
+
+
+.edit-btn {
+    background-color: #ffc107;
+    color: white;
+}
+
+.edit-btn:hover {
+    background-color: #e0a800;
+}
+
+.task-container .badge {
+    font-size: 0.75em;
+}
+
+.task-container img {
+    border: 2px solid #e9ecef;
+}
