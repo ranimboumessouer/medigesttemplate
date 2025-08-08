@@ -1,4 +1,166 @@
-<app-breadcrumb [title]="'To-Do'" [items]="['Apps']" [active_item]="'To-Do'"></app-breadcrumb>
+<app-breadcrumb [title]="'Patients'" [items]="['Apps']" [active_item]="'Ajouter Patient'"></app-breadcrumb>
+<div class="container-fluid email-wrap bookmark-wrap todo-wrap">
+    <div class="row">
+        <div class="col-xl-3">
+            <!-- Vous pouvez ajouter un filtre ou laisser vide -->
+            <div class="card">
+                <div class="card-header">
+                    <h5>Informations</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">Sélectionnez un utilisateur et ajoutez sa date de naissance pour créer un nouveau patient.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-9">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Ajouter Patient</h5>
+                </div>
+                <div class="card-body pt-0">
+                    <div class="todo">
+                        <div class="todo-list-wrapper">
+                            <div class="todo-list-container">
+                                <div class="mark-all-tasks">
+                                    <div class="mark-all-tasks-container">
+                                        <!-- Message d'erreur ou succès -->
+                                        <div class="alert alert-danger" *ngIf="errorMessage">
+                                            <i class="icon-alert-triangle me-2"></i>{{ errorMessage }}
+                                        </div>
+                                        <div class="alert alert-success" *ngIf="successMessage">
+                                            <i class="icon-check me-2"></i>{{ successMessage }}
+                                        </div>
+                                    </div>
+                                    <div class="todo-list-footer ms-2">
+                                        <div class="add-task-btn-wrapper">
+                                            <span class="add-task-btn">
+                                                <button class="btn btn-primary" (click)="visible=true">
+                                                    <i class="icon-user-plus"></i> Nouveau Patient
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Liste des utilisateurs disponibles -->
+                                <div class="todo-list-body" *ngIf="!visible">
+                                    <div *ngIf="isLoadingUsers" class="text-center p-4">
+                                        <i class="fa fa-spinner fa-spin me-2"></i>Chargement des utilisateurs...
+                                    </div>
+                                    
+                                    <ul id="todo-list" *ngIf="!isLoadingUsers">
+                                        <li class="text-muted text-center p-3" *ngIf="users.length === 0">
+                                            Aucun utilisateur disponible
+                                        </li>
+                                        
+                                        @for (user of users; let i = $index; track user) {
+                                        <li class="task">
+                                            <div class="task-container">
+                                                <h4 class="task-label">{{ getUserDisplayName(user) }}</h4>
+                                                <div class="d-flex">
+                                                    <div>
+                                                        <span class="task-priority badge badge-light-info">{{ user.email }}</span>
+                                                    </div>
+                                                    <h5 class="assign-name">{{ user.tlf }}</h5>
+                                                    <span class="task-action-btn">
+                                                        <span class="action-box large complete-btn" 
+                                                              title="Sélectionner cet utilisateur"
+                                                              (click)="selectUser(user)">
+                                                            <i class="icon"><i class="icon-check"></i></i>
+                                                        </span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        }
+                                    </ul>
+                                </div>
+
+                                <!-- Formulaire d'ajout de patient -->
+                                <div class="todo-list-footer">
+                                    <div class="new-task-wrapper" [ngClass]="{'visible': visible}">
+                                        <form [formGroup]="patientForm" (ngSubmit)="onSubmit()">
+                                            
+                                            <!-- Sélection de l'utilisateur -->
+                                            <div class="mb-3">
+                                                <label class="form-label">Sélectionner un utilisateur *</label>
+                                                <select 
+                                                    class="form-control form-select"
+                                                    formControlName="user"
+                                                    [class.is-invalid]="user?.invalid && user?.touched"
+                                                    [disabled]="isLoadingUsers">
+                                                    
+                                                    <option value="" disabled>
+                                                        {{ isLoadingUsers ? 'Chargement...' : 'Choisir un utilisateur' }}
+                                                    </option>
+                                                    
+                                                    <option 
+                                                        *ngFor="let u of users" 
+                                                        [value]="u.id">
+                                                        {{ getUserDisplayName(u) }} - {{ u.email }}
+                                                    </option>
+                                                </select>
+                                                
+                                                <div class="invalid-feedback" *ngIf="user?.invalid && user?.touched">
+                                                    <div *ngIf="user?.errors?.['required']">L'utilisateur est requis</div>
+                                                    <div *ngIf="user?.errors?.['serverError']">{{ user?.errors?.['serverError'] }}</div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Date de naissance -->
+                                            <div class="mb-3">
+                                                <label class="form-label">Date de naissance *</label>
+                                                <input 
+                                                    type="date" 
+                                                    class="form-control"
+                                                    formControlName="dateNaissance"
+                                                    [class.is-invalid]="dateNaissance?.invalid && dateNaissance?.touched"
+                                                    [max]="getCurrentDate()">
+                                                
+                                                <div class="invalid-feedback" *ngIf="dateNaissance?.invalid && dateNaissance?.touched">
+                                                    <div *ngIf="dateNaissance?.errors?.['required']">La date de naissance est requise</div>
+                                                    <div *ngIf="dateNaissance?.errors?.['serverError']">{{ dateNaissance?.errors?.['serverError'] }}</div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Boutons d'action -->
+                                            <div class="d-flex gap-2">
+                                                <span class="btn btn-danger cancel-btn" 
+                                                      (click)="visible=false; patientForm.reset();">
+                                                    Fermer
+                                                </span>
+                                                <span class="btn btn-secondary ms-2" 
+                                                      (click)="onCancel()"
+                                                      [class.disabled]="isSubmitting">
+                                                    Annuler
+                                                </span>
+                                                <button class="btn btn-success ms-2" 
+                                                        type="submit"
+                                                        [disabled]="patientForm.invalid || isSubmitting || isLoadingUsers">
+                                                    <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
+                                                    {{ isSubmitting ? 'Création...' : 'Créer Patient' }}
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="notification-popup hide">
+                            <p><span class="task"></span><span class="notification-text"></span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<!-- <app-breadcrumb [title]="'To-Do'" [items]="['Apps']" [active_item]="'To-Do'"></app-breadcrumb>
 <div class="container-fluid email-wrap bookmark-wrap todo-wrap">
     <div class="row">
         <div class="col-xl-3">
@@ -94,4 +256,4 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
