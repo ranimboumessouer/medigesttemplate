@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
+ /**
 export interface User {
   id?: number;
   nom: string;
@@ -25,14 +25,14 @@ export interface CreateUserRequest {
   adresse: string;
   roles: string[];
   password: string;
-}
+}*/
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  private apiUrl = 'http://localhost:8000/api/users';
+ private apiUrl = 'http://localhost:8000/api/users';
 
   private httpOptions = {
     headers: new HttpHeaders({
@@ -45,22 +45,35 @@ export class UserService {
   /**
    * Récupérer tous les utilisateurs
    */
-  getAllUsers(): Observable<User[]> {
-    return this.http.get<User[]>(this.apiUrl);
+  getAllUsers(): Observable<any> {
+    return this.http.get<any>(this.apiUrl);
   }
 
   /**
    * Récupérer un utilisateur par ID
    */
-  getUserById(id: number): Observable<User> {
-    return this.http.get<User>(`${this.apiUrl}/${id}`);
+  getUserById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
 
   /**
    * Créer un nouvel utilisateur
    */
-  createUser(userData: CreateUserRequest): Observable<User> {
-    return this.http.post<User>(this.apiUrl, userData, this.httpOptions);
+  createUser(userData: any): Observable<any> {
+    return this.http.post<any>(this.apiUrl, userData, this.httpOptions);
   }
 
-}
+  /**
+   * Mettre à jour un utilisateur
+   */
+  updateUser(id: number, userData: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${id}`, userData, this.httpOptions);
+  }
+
+  /**
+   * Supprimer un utilisateur
+   */
+  deleteUser(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${id}`);
+  }
+  }
