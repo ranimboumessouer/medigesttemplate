@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
+ /**
 export interface Patient {
   id?: number;
   dateNaissance: string;
@@ -21,47 +21,56 @@ export interface CreatePatientRequest {
   dateNaissance: string;
   user: number; // ID de l'utilisateur
 }
-
+*/
 @Injectable({
   providedIn: 'root'
 })
 export class PatientsService {
-  private patientsUrl = 'http://localhost:8000/api/patients';
+   private apiUrl = 'http://localhost:8000/api/patients';
+
+  private httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json'
+    })
+  };
 
   constructor(private http: HttpClient) {}
 
-  getAllPatient(): Observable<any> {
-    return this.http.get<any>(this.patientsUrl);
+  /**
+   * Récupérer tous les patients
+   */
+   getAllPatient(): Observable<any> {
+    return this.http.get<any>(this.apiUrl);
   }
 
   /**
    * Récupérer un patient par ID
    */
-  getPatientById(id: number): Observable<Patient> {
-    return this.http.get<Patient>(`${this.apiUrl}/${id}`);
+  getPatientById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
 
   /**
    * Créer un nouveau patient
    */
-  createPatient(patientData: CreatePatientRequest): Observable<Patient> {
-    return this.http.post<Patient>(this.apiUrl, patientData, this.httpOptions);
+  createPatient(patientData: any): Observable<any> {
+    return this.http.post<any>(this.apiUrl, patientData, this.httpOptions);
   }
 
   /**
    * Mettre à jour un patient
-   
-  updatePatient(id: number, patientData: Partial<CreatePatientRequest>): Observable<Patient> {
-    return this.http.put<Patient>(`${this.apiUrl}/${id}`, patientData, this.httpOptions);
-  }*/
+   */
+  updatePatient(id: number, patientData: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${id}`, patientData, this.httpOptions);
+  }
 
   /**
    * Supprimer un patient
    */
   deletePatient(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`);
+    return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
-}
+  }
 
 
 
