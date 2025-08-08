@@ -1,50 +1,136 @@
-<div class="container-fluid user-card">
-  <div class="row">
-    @for (patient of fullData; track patient) {
-
-    <div class="col-md-6 col-lg-6 col-xl-4 box-col-4">
-      <div class="card custom-card">
-        <!-- @for (user of userCards; track user) { -->
-
-        <div class="card-header">
-          <img class="img-fluid" src="{{ patient.image }}" alt="" />
+<app-breadcrumb [title]="'Patients'" [items]="['Apps']" [active_item]="'Liste Patients'"></app-breadcrumb>
+<div class="container-fluid email-wrap bookmark-wrap todo-wrap">
+    <div class="row">
+        <div class="col-xl-3">
+            <!-- Filtre ou informations -->
+            <div class="card">
+                <div class="card-header">
+                    <h5>Informations</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">Liste de tous les patients enregistrés dans le système.</p>
+                    <div class="mt-3">
+                        <button class="btn btn-primary w-100" routerLink="/patients/ajouter">
+                            <i class="icon-user-plus me-2"></i>Nouveau Patient
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="card-profile">
-          <img class="rounded-circle" src="assets/images/profile-image.png" alt="" />
+        <div class="col-xl-9">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Liste des Patients</h5>
+                </div>
+                <div class="card-body pt-0">
+                    <div class="todo">
+                        <div class="todo-list-wrapper">
+                            <div class="todo-list-container">
+                                <div class="mark-all-tasks">
+                                    <div class="mark-all-tasks-container">
+                                        <!-- Messages d'état -->
+                                        <div class="alert alert-info" *ngIf="isLoading">
+                                            <i class="fa fa-spinner fa-spin me-2"></i>Chargement des patients...
+                                        </div>
+                                        <div class="alert alert-warning" *ngIf="!isLoading && fullData.length === 0">
+                                            <i class="icon-alert-triangle me-2"></i>Aucun patient trouvé
+                                        </div>
+                                    </div>
+                                    <div class="todo-list-footer ms-2">
+                                        <div class="add-task-btn-wrapper">
+                                            <span class="add-task-btn">
+                                                <span class="badge badge-light-primary me-2">
+                                                    Total: {{ fullData.length }} patient(s)
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Liste des patients -->
+                                <div class="todo-list-body" *ngIf="!isLoading">
+                                    <ul id="todo-list" *ngIf="fullData.length > 0">
+                                        @for (patient of fullData; let i = $index; track patient) {
+                                        <li class="task">
+                                            <div class="task-container">
+                                                <div class="d-flex align-items-center">
+                                                    <!-- Avatar du patient -->
+                                                    <div class="me-3">
+                                                        <img 
+                                                            class="rounded-circle" 
+                                                            src="{{ patient.image || 'assets/images/profile-image.png' }}" 
+                                                            alt="Avatar" 
+                                                            style="width: 50px; height: 50px; object-fit: cover;">
+                                                    </div>
+                                                    
+                                                    <!-- Informations du patient -->
+                                                    <div class="flex-grow-1">
+                                                        <h4 class="task-label mb-1">{{ patient.user.nom }}</h4>
+                                                        <div class="d-flex flex-wrap gap-2">
+                                                            <span class="task-priority badge badge-light-info">
+                                                                <i class="icon-mail me-1"></i>{{ patient.user.email }}
+                                                            </span>
+                                                            <span class="task-priority badge badge-light-secondary">
+                                                                <i class="icon-phone me-1"></i>{{ patient.user.tlf }}
+                                                            </span>
+                                                            <span class="task-priority badge badge-light-success">
+                                                                <i class="icon-calendar me-1"></i>{{ patient.dateNaissance }}
+                                                            </span>
+                                                        </div>
+                                                        <small class="text-muted mt-1 d-block">
+                                                            <i class="icon-location-pin me-1"></i>{{ patient.user.adresse }}
+                                                        </small>
+                                                    </div>
+                                                    
+                                                    <!-- Actions -->
+                                                    <div class="task-action-btn">
+                                                        <span class="action-box large complete-btn me-1" 
+                                                              title="Voir le profil"
+                                                              routerLink="/users/users-profile">
+                                                            <i class="icon"><i class="icon-eye"></i></i>
+                                                        </span>
+                                                        <span class="action-box large edit-btn me-1" 
+                                                              title="Modifier"
+                                                              (click)="editPatient(patient)">
+                                                            <i class="icon"><i class="icon-pencil"></i></i>
+                                                        </span>
+                                                        <span class="action-box large delete-btn" 
+                                                              title="Supprimer"
+                                                              (click)="deletePatient(patient, i)">
+                                                            <i class="icon"><i class="icon-trash"></i></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        }
+                                    </ul>
+                                </div>
+
+                                <!-- Zone de pagination ou actions supplémentaires -->
+                                <div class="todo-list-footer" *ngIf="fullData.length > 0">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">
+                                            Affichage de {{ fullData.length }} patient(s)
+                                        </small>
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-outline-secondary btn-sm" (click)="refreshList()">
+                                                <i class="icon-refresh me-1"></i>Actualiser
+                                            </button>
+                                            <button class="btn btn-primary btn-sm" routerLink="/patients/ajouter">
+                                                <i class="icon-plus me-1"></i>Ajouter
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="notification-popup hide">
+                            <p><span class="task"></span><span class="notification-text"></span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      <!-- } -->
-        <div class="text-center profile-details">
-          <a routerLink="/users/users-profile">
-            <h4>{{ patient.user.nom }}</h4></a
-          >
-          <p class="mb-1"><strong>Email:</strong> {{ patient.user.email }}</p>
-          <p class="mb-1"><strong>Téléphone:</strong> {{ patient.user.tlf }}</p>
-          <p class="mb-1"><strong>Adresse:</strong> {{ patient.user.adresse }}</p>
-          <p class="mb-1"><strong>Date de naissance:</strong> {{ patient.dateNaissance }}</p>
-        </div>
-        <ul class="card-social">
-
-
-          <li>
-           <a
-              href="#"
-              class="text-danger"
-              title="Modifier"
-            >
-              <i class="fa fa-pencil"></i>
-            </a>
-          </li>
-          <li>
-            <a
-              title="Supprimer"
-              class="text-danger">
-              <i class="fa fa-trash"></i>
-
-            </a>
-          </li>
-        </ul>
-      </div>
     </div>
-    }
-  </div>
 </div>
