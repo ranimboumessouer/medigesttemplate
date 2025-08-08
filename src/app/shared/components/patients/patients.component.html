@@ -1,0 +1,20 @@
+<p>patients works!</p>
+<div class="container">
+  <div class="row">
+    <div *ngFor="let patient of patients" class="col-md-4">
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">{{ patient.user.nom }} {{ patient.user.prenom }}</h5>
+          <p class="card-text">
+            Date de naissance : {{ patient.dateNaissance }}<br />
+            Email : {{ patient.user.email }}<br />
+            Téléphone : {{ patient.user.tlf }}<br />
+            Adresse : {{ patient.user.adresse }}
+          </p>
+          <button class="btn btn-primary btn-sm">Modifier</button>
+          <button class="btn btn-danger btn-sm">Supprimer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

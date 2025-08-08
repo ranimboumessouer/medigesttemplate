@@ -1,0 +1,50 @@
+<div class="container-fluid user-card">
+  <div class="row">
+    @for (patient of fullData; track patient) {
+
+    <div class="col-md-6 col-lg-6 col-xl-4 box-col-4">
+      <div class="card custom-card">
+        <!-- @for (user of userCards; track user) { -->
+
+        <div class="card-header">
+          <img class="img-fluid" src="{{ patient.image }}" alt="" />
+        </div>
+        <div class="card-profile">
+          <img class="rounded-circle" src="{{ patient.profileImg }}" alt="" />
+        </div>
+      <!-- } -->
+        <div class="text-center profile-details">
+          <a routerLink="/users/users-profile">
+            <h4>{{ patient.user.nom }}</h4></a
+          >
+          <p class="mb-1"><strong>Email:</strong> {{ patient.user.email }}</p>
+          <p class="mb-1"><strong>Téléphone:</strong> {{ patient.user.tlf }}</p>
+          <p class="mb-1"><strong>Adresse:</strong> {{ patient.user.adresse }}</p>
+          <p class="mb-1"><strong>Date de naissance:</strong> {{ patient.dateNaissance }}</p>
+        </div>
+        <ul class="card-social">
+
+
+          <li>
+           <a
+              href="#"
+              class="text-danger"
+              title="Modifier"
+            >
+              <i class="fa fa-pencil"></i>
+            </a>
+          </li>
+          <li>
+            <a
+              title="Supprimer"
+              class="text-danger">
+              <i class="fa fa-trash"></i>
+
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    }
+  </div>
+</div>
