@@ -105,7 +105,9 @@ export class ToDoComponent implements OnInit {
           
           // Rediriger après 2 secondes
           setTimeout(() => {
-            this.router.navigate(['/patients/list']);
+            this.router.navigate(['/to-do']);
+            //this.router.navigate(['/patients/list']);
+            
           }, 2000);
         },
         error: (error) => {
@@ -141,7 +143,7 @@ export class ToDoComponent implements OnInit {
     this.patientForm.reset();
     this.errorMessage = '';
     this.successMessage = '';
-    this.router.navigate(['/patients/list']);
+    this.router.navigate(['/to-do']);
   }
 
   /**
